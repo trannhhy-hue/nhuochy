@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anime World - Thế Giới Hoạt Hình</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:#0b0d17;color:white;
+  font-family:Arial,sans-serif;
+}
+header{
+  height:72px;background:#151827;
+  display:flex;align-items:center;
+  justify-content:space-between;
+  padding:0 7%;position:sticky;top:0;z-index:10;
+  border-bottom:1px solid #292d40;
+}
+.logo{font-size:25px;font-weight:900;color:#a78bfa}
+nav a{color:#ddd;text-decoration:none;margin-left:24px}
+nav a:hover{color:#a78bfa}
+.hero{
+  margin:30px auto;width:86%;
+  min-height:300px;border-radius:22px;
+  padding:55px 40px;
+  background:linear-gradient(110deg,#30205e,#172b52,#111827);
+  display:flex;flex-direction:column;justify-content:center;
+}
+.hero h1{font-size:42px;margin-bottom:15px}
+.hero p{color:#d0cce5;line-height:1.7}
+.hero button{
+  width:max-content;margin-top:22px;
+  padding:13px 24px;border:0;border-radius:9px;
+  background:#8b5cf6;color:white;
+  font-weight:bold;cursor:pointer;
+}
+.container{width:86%;margin:40px auto}
+.tools{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0}
+input,select{
+  background:#1a1e30;color:white;
+  border:1px solid #343950;
+  border-radius:9px;padding:13px;
+}
+input{flex:1;min-width:200px}
+h2{font-size:25px;margin-bottom:15px}
+.filters button{
+  padding:10px 18px;border:1px solid #343950;
+  background:#191d2c;color:white;
+  border-radius:20px;cursor:pointer;margin:0 6px 8px 0;
+}
+.filters button.active,.filters button:hover{
+  background:#8054e9;border-color:#8054e9
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+  gap:20px;
+}
+.card{
+  background:#171b2a;border-radius:14px;
+  overflow:hidden;transition:.25s;
+  border:1px solid #292e40;
+}
+.card:hover{transform:translateY(-6px);border-color:#8b5cf6}
+.poster{
+  height:260px;display:flex;
+  flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;
+  padding:15px;
+}
+.poster span{font-size:64px}
+.poster h3{font-size:23px;margin-top:12px}
+.blue{background:linear-gradient(140deg,#155e9a,#172554)}
+.red{background:linear-gradient(140deg,#991b1b,#292044)}
+.purple{background:linear-gradient(140deg,#6d28d9,#1e1b4b)}
+.gold{background:linear-gradient(140deg,#92400e,#422006)}
+.info{padding:15px}
+.info h3{margin-bottom:8px}
+.info p{font-size:13px;color:#aab0c4;margin-bottom:13px}
+.info button{
+  width:100%;padding:11px;border:0;
+  border-radius:8px;background:#8054e9;
+  color:white;cursor:pointer;font-weight:bold;
+}
+.info button:hover{background:#6d43d4}
+.empty{color:#aaa;padding:30px;display:none}
+footer{
+  margin-top:60px;padding:30px;text-align:center;
+  background:#151827;color:#969bad;
+  line-height:2;
+}
+.modal{
+  display:none;position:fixed;inset:0;
+  z-index:20;background:#000c;
+  align-items:center;justify-content:center;padding:20px;
+}
+.modal-box{background:#1a1e30;border:1px solid #41445b;
+  border-radius:16px;padding:28px;
+  width:100%;max-width:450px;
+}
+.modal-box h2{color:#c4b5fd}
+.modal-box p{color:#ccc;line-height:1.7;margin:15px 0}
+.modal-box a,.close{
+  display:inline-block;padding:12px 17px;
+  border-radius:8px;text-decoration:none;
+  border:0;cursor:pointer;margin:5px 5px 0 0;
+}
+.watch{background:#8054e9;color:white}
+.close{background:#35394d;color:white}
+@media(max-width:650px){
+ header{padding:0 5%}
+ nav a{margin-left:10px;font-size:12px}
+ .logo{font-size:19px}
+ .hero{width:92%;padding:35px 22px}
+ .hero h1{font-size:30px}
+ .container{width:92%}
+ .poster{height:220px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🎬 ANIME WORLD</div>
+  <nav>
+    <a href="#">Trang chủ</a>
+    <a href="#movies">Danh sách phim</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Thế Giới Hoạt Hình</h1>
+  <p>Khám phá thế giới Doraemon và những vụ án
+  hấp dẫn của thám tử Conan.</p>
+  <button onclick="document.getElementById('movies').scrollIntoView()">
+    Khám phá ngay ▶
+  </button>
+</section>
+
+<main class="container" id="movies">
+  <h2>🍿 Kho phim hoạt hình</h2>
+
+  <div class="tools">
+    <input id="search" placeholder="🔍 Tìm tên phim..."
+      oninput="render()">
+  </div>
+
+  <div class="filters">
+    <button class="active" onclick="filter('all',this)">Tất cả</button>
+    <button onclick="filter('doraemon',this)">Doraemon</button>
+    <button onclick="filter('conan',this)">Conan</button>
+  </div>
+
+  <div class="grid" id="movieList"></div>
+  <p class="empty" id="empty">Không tìm thấy phim phù hợp!</p>
+</main>
+
+<div class="modal" id="modal">
+ <div class="modal-box">
+  <h2 id="modalTitle"></h2>
+  <p id="modalDesc"></p>
+  <a class="watch" id="watchLink" target="_blank"
+     rel="noopener noreferrer">Tìm nguồn xem chính thức ↗</a>
+  <button class="close" onclick="closeModal()">Đóng</button>
+ </div>
+</div>
+
+<footer>
+  <h3>🎬 ANIME WORLD</h3>
+  <p>Thế giới hoạt hình dành cho mọi người.</p>
+  <p>© 2026 Anime World</p>
+  <small>Website giới thiệu và điều hướng đến các nguồn
+  nội dung hợp pháp. Không lưu trữ phim có bản quyền.</small>
+</footer>desc:"Những vụ án bí ẩn và những cuộc phiêu lưu điện ảnh.",
+  query:"Detective Conan official movie"
+ }
+];
+
+let current="all";
+
+function render(){
+ const q=document.getElementById("search").value.toLowerCase();
+ const list=movies.filter(m=>
+  (current==="all"||m.category===current)&&
+  m.name.toLowerCase().includes(q)
+ );
+ document.getElementById("movieList").innerHTML=list.map(m=>`
+  <article class="card">
+   <div class="poster ${m.style}">
+    <span>${m.icon}</span>
+    <h3>${m.name}</h3>
+   </div>
+   <div class="info">
+    <h3>${m.name}</h3>
+    <p>${m.desc}</p>
+    <button onclick="showMovie('${m.name}')">
+      Xem thông tin ▶
+    </button>
+   </div>
+  </article>
+ `).join("");
+ document.getElementById("empty").style.display=
+  list.length?"none":"block";
+}
+
+function filter(category,btn){
+ current=category;
+ document.querySelectorAll(".filters button")
+  .forEach(b=>b.classList.remove("active"));
+ btn.classList.add("active");
+ render();
+}
+
+function showMovie(name){
+ const m=movies.find(x=>x.name===name);
+ if(!m)return;
+ document.getElementById("modalTitle").textContent=m.name;
+ document.getElementById("modalDesc").textContent=m.desc;
+ document.getElementById("watchLink").href=
+  "https://www.youtube.com/results?search_query="+
+  encodeURIComponent(m.query);
+ document.getElementById("modal").style.display="flex";
+}
+
+function closeModal(){
+ document.getElementById("modal").style.display="none";
+}
+
+document.getElementById("modal").addEventListener("click",e=>{
+ if(e.target.id==="modal")closeModal();
+});
+
+render();
+</script>
+</body>
+</html>
+
+<script>
+const movies=[
+ {
+  name:"Doraemon",
+  category:"doraemon",
+  icon:"🤖",style:"blue",
+  desc:"Chú mèo máy đến từ tương lai cùng Nobita và những người bạn.",
+  query:"Doraemon kênh chính thức"
+ },
+ {
+  name:"Doraemon - Phim điện ảnh",
+  category:"doraemon",
+  icon:"🚀",style:"purple",
+  desc:"Những chuyến phiêu lưu kỳ thú của nhóm bạn Doraemon.",
+  query:"Doraemon movie official"
+ },
+ {
+  name:"Thám tử Conan",
+  category:"conan",
+  icon:"🕵️",style:"red",
+  desc:"Shinichi Kudo bị teo nhỏ và tiếp tục phá án dưới thân phận Conan.",
+  query:"Thám tử Conan kênh chính thức"
+ },
+ {
+  name:"Conan - Movie",
+  category:"conan",
+  icon:"🔎",style:"gold",
